@@ -50,7 +50,7 @@ jobs:
       - name: Checkout GitOps repo
         uses: actions/checkout@v3
         with:
-          repository: your-username/gitops-repo  # ← 실제 username으로 변경
+          repository: cheesecrust/gitops-repo  # ← 실제 username으로 변경
           token: ${{ secrets.GITOPS_TOKEN }}
           path: gitops
       

@@ -52,10 +52,11 @@ class RsaJwtServiceTest {
     void generateAccessToken_Success() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER", "ADMIN");
 
         // When
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // Then
         assertThat(token).isNotNull();
@@ -83,8 +84,9 @@ class RsaJwtServiceTest {
     void extractEmail_Success() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // When
         String extractedEmail = rsaJwtService.extractEmail(token);
@@ -98,14 +100,16 @@ class RsaJwtServiceTest {
     void extractClaims_Success() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER", "ADMIN");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // When
         Claims claims = rsaJwtService.extractClaims(token);
 
         // Then
         assertThat(claims.getSubject()).isEqualTo(email);
+        assertThat(claims.get("name")).isEqualTo(name);
         assertThat(claims.get("roles")).isNotNull();
         assertThat(claims.get("type")).isEqualTo("access");
     }
@@ -115,8 +119,9 @@ class RsaJwtServiceTest {
     void isTokenValid_ValidToken_ReturnsTrue() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // When
         boolean isValid = rsaJwtService.isTokenValid(token);
@@ -143,8 +148,9 @@ class RsaJwtServiceTest {
     void isTokenExpired_ValidToken_ReturnsFalse() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // When
         boolean isExpired = rsaJwtService.isTokenExpired(token);
@@ -158,8 +164,9 @@ class RsaJwtServiceTest {
     void getTokenType_AccessToken_ReturnsAccess() {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // When
         String tokenType = rsaJwtService.getTokenType(token);
@@ -215,8 +222,9 @@ class RsaJwtServiceTest {
     void tokenVerification_WithDifferentKey_Fails() throws NoSuchAlgorithmException {
         // Given
         String email = "test@example.com";
+        String name = "Test User";
         Set<String> roles = Set.of("USER");
-        String token = rsaJwtService.generateAccessToken(email, roles);
+        String token = rsaJwtService.generateAccessToken(email, name, roles);
 
         // 다른 RSA 서비스 생성
         RsaJwtService anotherRsaService = new RsaJwtService();

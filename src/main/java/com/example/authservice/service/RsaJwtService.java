@@ -40,9 +40,10 @@ public class RsaJwtService {
         this.publicKey = keyPair.getPublic();
     }
 
-    public String generateAccessToken(String email, Set<String> roles) {
+    public String generateAccessToken(String email, String name, Set<String> roles) {
         return Jwts.builder()
                 .subject(email)
+                .claim("name", name)
                 .claim("roles", roles)
                 .claim("type", "access")
                 .issuedAt(new Date())

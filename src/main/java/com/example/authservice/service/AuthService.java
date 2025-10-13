@@ -34,7 +34,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        String accessToken = jwtService.generateAccessToken(savedUser.getEmail(), savedUser.getRoles());
+        String accessToken = jwtService.generateAccessToken(savedUser.getEmail(), savedUser.getName(), savedUser.getRoles());
         String refreshToken = jwtService.generateRefreshToken(savedUser.getEmail());
 
         return new AuthResponse(
@@ -54,7 +54,7 @@ public class AuthService {
             throw new RuntimeException("비밀번호가 일치하지 않습니다");
         }
 
-        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getRoles());
+        String accessToken = jwtService.generateAccessToken(user.getEmail(), user.getName(), user.getRoles());
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         return new AuthResponse(
@@ -79,7 +79,7 @@ public class AuthService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다"));
 
-        String newAccessToken = jwtService.generateAccessToken(user.getEmail(), user.getRoles());
+        String newAccessToken = jwtService.generateAccessToken(user.getEmail(), user.getName(), user.getRoles());
         String newRefreshToken = jwtService.generateRefreshToken(user.getEmail());
 
         return new AuthResponse(

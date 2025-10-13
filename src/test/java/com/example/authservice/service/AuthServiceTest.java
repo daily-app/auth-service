@@ -68,7 +68,7 @@ class AuthServiceTest {
         when(userRepository.existsByEmail(registerRequest.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(testUser);
-        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getRoles()))
+        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getName(), testUser.getRoles()))
                 .thenReturn("accessToken");
         when(jwtService.generateRefreshToken(testUser.getEmail()))
                 .thenReturn("refreshToken");
@@ -87,7 +87,7 @@ class AuthServiceTest {
         verify(userRepository).existsByEmail(registerRequest.getEmail());
         verify(passwordEncoder).encode(registerRequest.getPassword());
         verify(userRepository).save(any(User.class));
-        verify(jwtService).generateAccessToken(testUser.getEmail(), testUser.getRoles());
+        verify(jwtService).generateAccessToken(testUser.getEmail(), testUser.getName(), testUser.getRoles());
         verify(jwtService).generateRefreshToken(testUser.getEmail());
     }
 
@@ -113,7 +113,7 @@ class AuthServiceTest {
         // Given
         when(userRepository.findByEmail(loginRequest.getEmail())).thenReturn(Optional.of(testUser));
         when(passwordEncoder.matches(loginRequest.getPassword(), testUser.getPassword())).thenReturn(true);
-        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getRoles()))
+        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getName(), testUser.getRoles()))
                 .thenReturn("accessToken");
         when(jwtService.generateRefreshToken(testUser.getEmail()))
                 .thenReturn("refreshToken");
@@ -131,7 +131,7 @@ class AuthServiceTest {
 
         verify(userRepository).findByEmail(loginRequest.getEmail());
         verify(passwordEncoder).matches(loginRequest.getPassword(), testUser.getPassword());
-        verify(jwtService).generateAccessToken(testUser.getEmail(), testUser.getRoles());
+        verify(jwtService).generateAccessToken(testUser.getEmail(), testUser.getName(), testUser.getRoles());
         verify(jwtService).generateRefreshToken(testUser.getEmail());
     }
 
@@ -177,7 +177,7 @@ class AuthServiceTest {
         when(jwtService.getTokenType(refreshToken)).thenReturn("refresh");
         when(jwtService.extractEmail(refreshToken)).thenReturn(testUser.getEmail());
         when(userRepository.findByEmail(testUser.getEmail())).thenReturn(Optional.of(testUser));
-        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getRoles()))
+        when(jwtService.generateAccessToken(testUser.getEmail(), testUser.getName(), testUser.getRoles()))
                 .thenReturn("newAccessToken");
         when(jwtService.generateRefreshToken(testUser.getEmail()))
                 .thenReturn("newRefreshToken");
